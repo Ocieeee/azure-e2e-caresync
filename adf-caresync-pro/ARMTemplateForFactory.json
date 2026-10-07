@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-caresync-pro"
 		},
+		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1007-083738-kte4icnv"
+		},
 		"LS_AzureSqlDatabase_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "caresync-project.database.windows.net"
@@ -38,10 +42,6 @@
 		"LS_adls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://careproject.dfs.core.windows.net/"
-		},
-		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
-			"type": "string",
-			"defaultValue": "1007-083738-kte4icnv"
 		}
 	},
 	"variables": {
@@ -266,7 +266,7 @@
 						],
 						"policy": {
 							"timeout": "0.12:00:00",
-							"retry": 2,
+							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -281,7 +281,7 @@
 								{
 									"type": "Query",
 									"text": {
-										"value": "UPDATE ctrl.audit_log \nSET status ='SUCCESS', end_time=SYSDATETIME() ,records_written=@{activity('Bronze to Silver').output.runOutput}\nWHERE adf_run_id='@{pipeline().parameters.adf_run_id}' and table_id=@{pipeline().parameters.table_id}",
+										"value": "UPDATE ctrl.audit_log \nset status ='SUCCESS', end_time=SYSDATETIME() ,records_written=@{activity('Bronze to Silver').output.runOutput}\nWHERE adf_run_id='@{pipeline().parameters.adf_run_id}' and table_id=@{pipeline().parameters.table_id}",
 										"type": "Expression"
 									}
 								}
@@ -330,7 +330,7 @@
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
-							"retry": 2,
+							"retry": 0,
 							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
@@ -485,7 +485,7 @@
 					},
 					"adf_run_id": {
 						"type": "string",
-						"defaultValue": "a2"
+						"defaultValue": "a1"
 					}
 				},
 				"variables": {
@@ -652,6 +652,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureDatabricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-7405618037196618.18.azuredatabricks.net",
+					"accessToken": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "adb-token"
+					},
+					"existingClusterId": "[parameters('LS_AzureDatabricks_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_KeyVault')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LS_AzureSqlDatabase')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -732,30 +756,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_AzureDatabricks')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureDatabricks",
-				"typeProperties": {
-					"domain": "https://adb-7405618037196618.18.azuredatabricks.net",
-					"accessToken": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "LS_KeyVault",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "adb-token"
-					},
-					"existingClusterId": "[parameters('LS_AzureDatabricks_properties_typeProperties_existingClusterId')]"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_KeyVault')]"
-			]
 		}
 	]
 }

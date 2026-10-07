@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "adf-caresync-pro"
 		},
+		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
+			"value": "1007-083738-kte4icnv"
+		},
 		"LS_AzureSqlDatabase_properties_typeProperties_server": {
 			"value": "caresync-project.database.windows.net"
 		},
@@ -28,9 +31,6 @@
 		},
 		"LS_adls_properties_typeProperties_url": {
 			"value": "https://careproject.dfs.core.windows.net/"
-		},
-		"LS_AzureDatabricks_properties_typeProperties_existingClusterId": {
-			"value": "1007-083738-kte4icnv"
 		},
 		"containerUri": {
 			"value": ""
