@@ -8,7 +8,7 @@
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
-					"retry": 1,
+					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
 					"secureInput": false
@@ -370,7 +370,7 @@
 		"parameters": {
 			"table_id": {
 				"type": "string",
-				"defaultValue": "1"
+				"defaultValue": "3"
 			},
 			"adf_run_id": {
 				"type": "string",
